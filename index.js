@@ -1,4 +1,6 @@
-const Employee = require("./lib/Employee");
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 
 const managerQuestions = [{
@@ -24,7 +26,7 @@ const managerQuestions = [{
     }
 }, {
     type: "input",
-    name: "officeNumber",
+    name: "extraInformation",
     message: "What is your Manager's Office Number?",
     validate: function(num) {
         return /[1-9]/gi.test(num);
@@ -54,7 +56,7 @@ const engineerQuestions = [{
     }
 }, {
     type: "input",
-    name: "engineerGitHub",
+    name: "extraInformation",
     message: "What is your Engineer's GitHub username?",
     validate: function(username) {
         return /[a-z1-9]/gi.test(username);
@@ -84,7 +86,7 @@ const internQuestions = [{
     }
 }, {
     type: "input",
-    name: "internSchool",
+    name: "extraInformation",
     message: "What is your Intern's School?",
     validate: function(school) {
         return /[a-z]/gi.test(school);
@@ -98,18 +100,60 @@ const newTeamMember = {
     choices: ["Manager", "Engineer", "Intern", "None"]
 };
 
+function createNewManager() {
+    inquirer.prompt(managerQuestions)
+        .then(response => {
+            return new Manager(response.name, response.id, response.email, response.extraInformation);
+        })
+        .then(() => {
+            //generateHTML()
+            addTeamMember();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function createNewEngineer() {
+    inquirer.prompt(engineerQuestions)
+        .then(response => {
+            return new Engineer(response.name, response.id, response.email, response.extraInformation);
+        })
+        .then(() => {
+            //generateHTML()
+            addTeamMember();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function createNewIntern() {
+    inquirer.prompt(internQuestions)
+        .then(response => {
+            return new Intern(response.name, response.id, response.email, response.extraInformation);
+        })
+        .then(() => {
+            //generateHTML()
+            addTeamMember();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
 function addTeamMember() {
     inquirer.prompt(newTeamMember)
         .then(response => {
             switch (response.newTeamMember) {
                 case "Manager":
-                    createNewTeamMember(managerQuestions);
+                    createNewManager();
                     break;
                 case "Engineer":
-                    createNewTeamMember(engineerQuestions);
+                    createNewEngineer();
                     break;
                 case "Intern":
-                    createNewTeamMember(internQuestions);
+                    createNewIntern();
                     break;
                 case "None":
                     console.log("all done")
@@ -121,20 +165,9 @@ function addTeamMember() {
         })
 }
 
-function createNewTeamMember(teamMemberQuestions) {
-    inquirer.prompt(teamMemberQuestions)
-        .then(response => {
-            console.log(response);
-            addTeamMember();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-}
-
 function init() {
     console.log("Please build your team");
-    createNewTeamMember(managerQuestions);
+    createNewManager();
 }
 
 init()
