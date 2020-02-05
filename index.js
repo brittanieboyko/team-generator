@@ -20,7 +20,7 @@ const managerQuestions = [{
     name: "email",
     message: "What is your Manager's Email Address?",
     validate: function(email) {
-    return /[a-z1-9]/gi.test(email);
+        return /[a-z1-9]/gi.test(email);
     }
 }, {
     type: "input",
@@ -80,7 +80,7 @@ const internQuestions = [{
     name: "email",
     message: "What is your Intern's Email Address?",
     validate: function(email) {
-    return /[a-z1-9]/gi.test(email);
+        return /[a-z1-9]/gi.test(email);
     }
 }, {
     type: "input",
@@ -110,24 +110,25 @@ function createManager() {
             createNewTeamMember();
         })
 }
+
 function createNewTeamMember() {
     inquirer.prompt(newTeamMember)
-    .then(response => {
-        switch (response.newTeamMember) {
-            case "Manager":
-                createManager();
-                break;
-            case "Engineer":
-                createEngineer();
-                break;
-            case "Intern":
-                createIntern();
-                break;
-            case "None":
-                console.log("all done")
-                break;
-        }
-    })
+        .then(response => {
+            switch (response.newTeamMember) {
+                case "Manager":
+                    createManager();
+                    break;
+                case "Engineer":
+                    createEngineer();
+                    break;
+                case "Intern":
+                    createIntern();
+                    break;
+                case "None":
+                    console.log("all done")
+                    break;
+            }
+        })
 }
 
 function createEngineer() {
