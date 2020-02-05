@@ -104,10 +104,13 @@ const newTeamMember = {
 };
 
 function writeToFile(inquirerData, role) {
-    const html = htmlRenderer.generateHTML(inquirerData)
+    const html = htmlRenderer.generateHTML({
+        ...inquirerData,
+        role
+    })
     fs.writeFile(`./templates/${role}.html`, html, function(err) {
         if (err) {
-          throw err;
+            throw err;
         }
     })
 }
