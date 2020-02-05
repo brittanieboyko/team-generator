@@ -98,53 +98,43 @@ const newTeamMember = {
     choices: ["Manager", "Engineer", "Intern", "None"]
 };
 
-function init() {
-    console.log("Please build your team");
-    createManager()
-}
-
-function createManager() {
-    inquirer.prompt(managerQuestions)
-        .then(response => {
-            console.log(response);
-            createNewTeamMember();
-        })
-}
-
-function createNewTeamMember() {
+function addTeamMember() {
     inquirer.prompt(newTeamMember)
         .then(response => {
             switch (response.newTeamMember) {
                 case "Manager":
-                    createManager();
+                    createNewTeamMember(managerQuestions);
                     break;
                 case "Engineer":
-                    createEngineer();
+                    createNewTeamMember(engineerQuestions);
                     break;
                 case "Intern":
-                    createIntern();
+                    createNewTeamMember(internQuestions);
                     break;
                 case "None":
                     console.log("all done")
                     break;
             }
         })
-}
-
-function createEngineer() {
-    inquirer.prompt(engineerQuestions)
-        .then(response => {
-            console.log(response);
-            createNewTeamMember();
+        .catch(err => {
+            console.log(err);
         })
 }
 
-function createIntern() {
-    inquirer.prompt(internQuestions)
+function createNewTeamMember(teamMemberQuestions) {
+    inquirer.prompt(teamMemberQuestions)
         .then(response => {
             console.log(response);
-            createNewTeamMember();
+            addTeamMember();
         })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function init() {
+    console.log("Please build your team");
+    createNewTeamMember(managerQuestions);
 }
 
 init()
