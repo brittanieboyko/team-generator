@@ -2,6 +2,9 @@ const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
+const htmlRenderer = require("./lib/htmlRenderer");
+const fs = require("fs");
+
 
 const managerQuestions = [{
     type: "input",
@@ -100,14 +103,23 @@ const newTeamMember = {
     choices: ["Manager", "Engineer", "Intern", "None"]
 };
 
+function writeToFile(inquirerData, role) {
+    const html = htmlRenderer.generateHTML(inquirerData)
+    fs.writeFile(`./templates/${role}.html`, html, function(err) {
+        if (err) {
+          throw err;
+        }
+    })
+}
+
 function createNewManager() {
     inquirer.prompt(managerQuestions)
         .then(response => {
+            writeToFile(response, "manager")
             return new Manager(response.name, response.id, response.email, response.extraInformation);
         })
         .then(() => {
-            //generateHTML()
-            addTeamMember();
+            addTeamMember()
         })
         .catch(err => {
             console.log(err);
@@ -117,10 +129,10 @@ function createNewManager() {
 function createNewEngineer() {
     inquirer.prompt(engineerQuestions)
         .then(response => {
+            writeToFile(response, "engineer")
             return new Engineer(response.name, response.id, response.email, response.extraInformation);
         })
         .then(() => {
-            //generateHTML()
             addTeamMember();
         })
         .catch(err => {
@@ -131,6 +143,7 @@ function createNewEngineer() {
 function createNewIntern() {
     inquirer.prompt(internQuestions)
         .then(response => {
+            writeToFile(response, "intern")
             return new Intern(response.name, response.id, response.email, response.extraInformation);
         })
         .then(() => {
