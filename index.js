@@ -4,6 +4,7 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const htmlRenderer = require("./lib/htmlRenderer");
 const fs = require("fs");
+let team = [];
 
 
 const managerQuestions = [{
@@ -103,87 +104,70 @@ const newTeamMember = {
     choices: ["Manager", "Engineer", "Intern", "None"]
 };
 
-function writeToFile(inquirerData, role) {
-    const html = htmlRenderer.generateHTML({
-        ...inquirerData,
-        role
-    })
-    fs.writeFile(`./templates/${role}.html`, html, function(err) {
-        if (err) {
-            throw err;
-        }
-    })
-}
-
-function createNewManager() {
-    inquirer.prompt(managerQuestions)
-        .then(response => {
-            writeToFile(response, "manager")
-            return new Manager(response.name, response.id, response.email, response.extraInformation);
-        })
-        .then(() => {
-            addTeamMember()
-        })
-        .catch(err => {
-            console.log(err);
-        })
-}
-
-function createNewEngineer() {
-    inquirer.prompt(engineerQuestions)
-        .then(response => {
-            writeToFile(response, "engineer")
-            return new Engineer(response.name, response.id, response.email, response.extraInformation);
-        })
-        .then(() => {
-            addTeamMember();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-}
-
-function createNewIntern() {
-    inquirer.prompt(internQuestions)
-        .then(response => {
-            writeToFile(response, "intern")
-            return new Intern(response.name, response.id, response.email, response.extraInformation);
-        })
-        .then(() => {
-            //generateHTML()
-            addTeamMember();
-        })
-        .catch(err => {
-            console.log(err);
-        })
+function createNewTeamMember(role) {
+    switch (role) {
+        case "Manager":
+            inquirer.prompt(managerQuestions)
+                .then(response => {
+                    const manager = new Manager(response.name, response.id, response.email, response.extraInformation)
+                    generateEmployeeHTML(response, manager)
+                })
+                .catch(err => {
+                    throw err
+                })
+            break;
+        case "Engineer":
+            inquirer.prompt(engineerQuestions)
+                .then(response => {
+                    const engineer = new Engineer(response.name, response.id, response.email, response.extraInformation)
+                    generateEmployeeHTML(response, engineer)
+                })
+                .catch(err => {
+                    throw err
+                })
+            break;
+        case "Intern":
+            inquirer.prompt(internQuestions)
+                .then(response => {
+                    const intern = new Intern(response.name, response.id, response.email, response.extraInformation)
+                    generateEmployeeHTML(response, intern)
+                })
+                .catch(err => {
+                    throw err
+                })
+            break;
+        case "None":
+            break;
+    }
 }
 
 function addTeamMember() {
     inquirer.prompt(newTeamMember)
         .then(response => {
-            switch (response.newTeamMember) {
-                case "Manager":
-                    createNewManager();
-                    break;
-                case "Engineer":
-                    createNewEngineer();
-                    break;
-                case "Intern":
-                    createNewIntern();
-                    break;
-                case "None":
-                    console.log("all done")
-                    break;
-            }
+            createNewTeamMember(response.newTeamMember);
         })
         .catch(err => {
             console.log(err);
         })
 }
 
+function generateEmployeeHTML(data, employee) {
+    const html = htmlRenderer.generateEmployeeHTML({
+        ...data,
+        employee
+    })
+    const htmlString = employee.getRole().toLowerCase()
+    fs.writeFile(`./templates/${htmlString}.html`, html, function(err) {
+        if (err) {
+            throw err
+        }
+    })
+    addTeamMember();
+}
+
 function init() {
     console.log("Please build your team");
-    createNewManager();
+    createNewTeamMember("Manager");
 }
 
 init()
