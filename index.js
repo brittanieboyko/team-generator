@@ -137,6 +137,7 @@ function createNewTeamMember(role) {
                 })
             break;
         case "None":
+            createTeamPage();
             break;
     }
 }
@@ -160,7 +161,18 @@ function generateEmployeeHTML(employee) {
             throw err
         }
     })
+    team.push(html)
     addTeamMember();
+}
+
+function createTeamPage() {
+    const mainHTML = htmlRenderer.generatePage()
+    const teamHTML = team.join("\n");
+        fs.writeFile(`./output/team.html`, mainHTML + teamHTML + `</body>\n</html>`, function(err) {
+            if (err) {
+                throw err
+            }
+        })
 }
 
 function init() {
