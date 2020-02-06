@@ -110,7 +110,7 @@ function createNewTeamMember(role) {
             inquirer.prompt(managerQuestions)
                 .then(response => {
                     const manager = new Manager(response.name, response.id, response.email, response.extraInformation)
-                    generateEmployeeHTML(response, manager)
+                    generateEmployeeHTML(manager)
                 })
                 .catch(err => {
                     throw err
@@ -120,7 +120,7 @@ function createNewTeamMember(role) {
             inquirer.prompt(engineerQuestions)
                 .then(response => {
                     const engineer = new Engineer(response.name, response.id, response.email, response.extraInformation)
-                    generateEmployeeHTML(response, engineer)
+                    generateEmployeeHTML(engineer)
                 })
                 .catch(err => {
                     throw err
@@ -130,7 +130,7 @@ function createNewTeamMember(role) {
             inquirer.prompt(internQuestions)
                 .then(response => {
                     const intern = new Intern(response.name, response.id, response.email, response.extraInformation)
-                    generateEmployeeHTML(response, intern)
+                    generateEmployeeHTML(intern)
                 })
                 .catch(err => {
                     throw err
@@ -151,11 +151,9 @@ function addTeamMember() {
         })
 }
 
-function generateEmployeeHTML(data, employee) {
-    const html = htmlRenderer.generateEmployeeHTML({
-        ...data,
-        employee
-    })
+function generateEmployeeHTML(employee) {
+    const html = htmlRenderer.generateEmployeeHTML(employee)
+
     const htmlString = employee.getRole().toLowerCase()
     fs.writeFile(`./templates/${htmlString}.html`, html, function(err) {
         if (err) {
