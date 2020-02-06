@@ -168,11 +168,11 @@ function generateEmployeeHTML(employee) {
 function createTeamPage() {
     const mainHTML = htmlRenderer.generatePage()
     const teamHTML = team.join("\n");
-        fs.writeFile(`./output/team.html`, mainHTML + teamHTML + `</div>\n</body>\n</html>`, function(err) {
-            if (err) {
-                throw err
-            }
-        })
+    fs.writeFile(`./output/team.html`, mainHTML + teamHTML + `\n</div>\n</div>\n</body>\n</html>`, function(err) {
+        if (err) {
+            throw err
+        }
+    })
 }
 
 function init() {
