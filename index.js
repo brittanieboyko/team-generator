@@ -104,7 +104,7 @@ const newTeamMember = {
     choices: ["Manager", "Engineer", "Intern", "None"]
 };
 
-function createNewTeamMember(role) {
+const createNewTeamMember = role => {
     switch (role) {
         case "Manager":
             inquirer.prompt(managerQuestions)
@@ -142,7 +142,7 @@ function createNewTeamMember(role) {
     }
 }
 
-function addTeamMember() {
+const addTeamMember = () => {
     inquirer.prompt(newTeamMember)
         .then(response => {
             createNewTeamMember(response.newTeamMember);
@@ -152,7 +152,7 @@ function addTeamMember() {
         })
 }
 
-function generateEmployeeHTML(employee) {
+const generateEmployeeHTML = employee => {
     const html = htmlRenderer.generateEmployeeHTML(employee)
 
     const htmlString = employee.getRole().toLowerCase()
@@ -165,7 +165,7 @@ function generateEmployeeHTML(employee) {
     addTeamMember();
 }
 
-function createTeamPage() {
+const createTeamPage = () => {
     const mainHTML = htmlRenderer.generatePage()
     const teamHTML = team.join("\n");
     fs.writeFile(`./output/team.html`, mainHTML + teamHTML + `\n</div>\n</div>\n</body>\n</html>`, function(err) {
@@ -175,7 +175,7 @@ function createTeamPage() {
     })
 }
 
-function init() {
+const init = () => {
     console.log("Please build your team");
     createNewTeamMember("Manager");
 }
